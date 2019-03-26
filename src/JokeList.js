@@ -13,31 +13,13 @@ class JokeList extends Component {
     }
 
     changeVote(id, delta) {
-        // logic of changing vote +1/-1
+        // logic of changing vote +1/-1 (delta)
         this.setState(st => ({
             jokes: st.jokes.map(joke => {
                 return joke.id === id ? {...joke, total: joke.total + delta} : joke
             })
         }))
     }
-
-    // handles joke up vote click from child (Joke)
-    // voteUp(id){
-    //     this.setState(st => ({
-    //         jokes: st.jokes.map(joke => {
-    //             return joke.id === id ? {...joke, upCount: joke.upCount + 1} : joke
-    //         })
-    //     }))
-    // }
-
-    // //handles joke down vote click from child (Joke)
-    // voteDown(id){
-    //     this.setState(st => ({
-    //         jokes: st.jokes.map(joke => {
-    //             return joke.id === id ? {...joke, downCount: joke.downCount - 1} : joke
-    //         })
-    //     }))
-    // }
 
     // runs after first render 
     // makes API calls to dadjokez
