@@ -7,32 +7,37 @@ class JokeList extends Component {
     constructor(props){
         super(props);
         this.state = {
-            jokes: [] //{joke: "contents", id: "", upCount: #, downCount: #}
+            jokes: [] //{joke: "contents", id: "", total: #}
         } 
+        this.changeVote = this.changeVote.bind(this);
     }
-
 
     changeVote(id, delta) {
         // logic of changing vote +1/-1
+        this.setState(st => ({
+            jokes: st.jokes.map(joke => {
+                return joke.id === id ? {...joke, total: joke.total + delta} : joke
+            })
+        }))
     }
 
     // handles joke up vote click from child (Joke)
-    voteUp(id){
-        this.setState(st => ({
-            jokes: st.jokes.map(joke => {
-                return joke.id === id ? {...joke, upCount: joke.upCount + 1} : joke
-            })
-        }))
-    }
+    // voteUp(id){
+    //     this.setState(st => ({
+    //         jokes: st.jokes.map(joke => {
+    //             return joke.id === id ? {...joke, upCount: joke.upCount + 1} : joke
+    //         })
+    //     }))
+    // }
 
-    //handles joke down vote click from child (Joke)
-    voteDown(id){
-        this.setState(st => ({
-            jokes: st.jokes.map(joke => {
-                return joke.id === id ? {...joke, downCount: joke.downCount - 1} : joke
-            })
-        }))
-    }
+    // //handles joke down vote click from child (Joke)
+    // voteDown(id){
+    //     this.setState(st => ({
+    //         jokes: st.jokes.map(joke => {
+    //             return joke.id === id ? {...joke, downCount: joke.downCount - 1} : joke
+    //         })
+    //     }))
+    // }
 
     // runs after first render 
     // makes API calls to dadjokez
@@ -49,7 +54,7 @@ class JokeList extends Component {
 
         let jokes = await Promise.all(promises);
         let newJokes = jokes.map(joke => {
-            return {...joke.data, upCount: 0, downCount: 0};
+            return {...joke.data, total: 0};
         })
         
         this.setState({
@@ -64,9 +69,10 @@ class JokeList extends Component {
                 {this.state.jokes.map(joke => 
                     <Joke key={ uuid() } 
                         jokeText={joke.joke} 
-                        total={joke.upCount + joke.downCount} 
-                        handleUpClick={() => this.voteUp(joke.id)} 
-                        handleDownClick={() => this.voteDown(joke.id)}/>
+                        total={joke.total} 
+                        handleUpClick={() => this.changeVote(joke.id, +1)}
+                        handleDownClick={() => this.changeVote(joke.id, -1)}
+                        />
                     )}
             </div>
         )
