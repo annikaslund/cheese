@@ -7,7 +7,8 @@ class JokeList extends Component {
     constructor(props){
         super(props);
         this.state = {
-            jokes: [] //{joke: "contents", id: "", total: #}
+            jokes: [], //{joke: "contents", id: "", total: #}
+            loading: true
         } 
         this.changeVote = this.changeVote.bind(this);
     }
@@ -20,24 +21,6 @@ class JokeList extends Component {
             })
         }))
     }
-
-    // handles joke up vote click from child (Joke)
-    // voteUp(id){
-    //     this.setState(st => ({
-    //         jokes: st.jokes.map(joke => {
-    //             return joke.id === id ? {...joke, upCount: joke.upCount + 1} : joke
-    //         })
-    //     }))
-    // }
-
-    // //handles joke down vote click from child (Joke)
-    // voteDown(id){
-    //     this.setState(st => ({
-    //         jokes: st.jokes.map(joke => {
-    //             return joke.id === id ? {...joke, downCount: joke.downCount - 1} : joke
-    //         })
-    //     }))
-    // }
 
     // runs after first render 
     // makes API calls to dadjokez
@@ -58,22 +41,24 @@ class JokeList extends Component {
         })
         
         this.setState({
-           jokes: newJokes
+           jokes: newJokes,
+           loading: false
         })
     }
 
     // renders a list of 10 jokes 
     render() {
+        let jokeArr = this.state.jokes.map(joke => 
+            <Joke key={ uuid() } 
+                jokeText={joke.joke} 
+                total={joke.total} 
+                handleUpClick={() => this.changeVote(joke.id, +1)}
+                handleDownClick={() => this.changeVote(joke.id, -1)}
+                />
+            )
         return (
             <div className="JokeList">
-                {this.state.jokes.map(joke => 
-                    <Joke key={ uuid() } 
-                        jokeText={joke.joke} 
-                        total={joke.total} 
-                        handleUpClick={() => this.changeVote(joke.id, +1)}
-                        handleDownClick={() => this.changeVote(joke.id, -1)}
-                        />
-                    )}
+            { this.state.loading === true ? "loading..." : jokeArr }
             </div>
         )
     }
