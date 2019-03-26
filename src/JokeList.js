@@ -14,7 +14,7 @@ class JokeList extends Component {
     }
 
     changeVote(id, delta) {
-        // logic of changing vote +1/-1
+        // logic of changing vote +1/-1 (delta)
         this.setState(st => ({
             jokes: st.jokes.map(joke => {
                 return joke.id === id ? {...joke, total: joke.total + delta} : joke
